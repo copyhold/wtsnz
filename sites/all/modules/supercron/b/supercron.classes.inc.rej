@@ -1,0 +1,10 @@
+--- a/supercron.classes.inc
++++ b/supercron.classes.inc
+@@ -439,6 +439,7 @@
+ 
+         if ($this->multithread OR $forced_multithreading) {
+             $url = str_replace('%', $this->module_name, supercron_registry()->get_external_invocation_url());
++            $url = url($url,array(absolute => TRUE));
+             _supercron_parallel_call($url);
+         }
+         else {

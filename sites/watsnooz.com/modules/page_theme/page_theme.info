@@ -1,0 +1,14 @@
+; $Id: page_theme.info,v 1.1.2.5 2010/09/30 13:56:29 flanker Exp $
+
+name = Page Theme
+description = Allows to use different themes than the site default on specific pages.
+
+core = 6.x
+package = Theme related
+
+; Information added by drupal.org packaging script on 2010-09-30
+version = "6.x-1.0"
+core = "6.x"
+project = "page_theme"
+datestamp = "1285871471"
+

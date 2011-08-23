@@ -1,0 +1,138 @@
+/* $Id: nodes.css,v 1.6 2009/11/02 15:37:29 johnalbin Exp $ */
+
+/**
+ * @file
+ * Node Styling
+ *
+ * Style anything that isn't in the $content variable.
+ */
+
+
+.node /* Node wrapper */ {
+}
+
+#social
+{
+position:absolute;
+margin-left:515px;
+width:220px;
+background:url(../images/social.png) 0 100% no-repeat;
+}
+#social > *
+{
+cursor:pointer;
+float:left;
+text-indent:-100px;
+width:32px;
+height:20px;
+overflow:hidden;
+}
+#social i
+{
+text-indent:0;
+}
+#social b
+{
+margin:0 7px 0 9px;
+width:67px;
+}
+#social u
+{
+width:97px;
+}
+
+a.fl
+{
+  float:right;
+  width:18px;
+  height:12px;
+  background:url(../images/flags.png) 0 0 no-repeat red;
+  text-indent:-1000px;
+  overflow:hidden;
+}
+.node a.fl
+{
+  margin-top:-52px;
+  margin-right: 85px;
+  height:18px;
+  width:24px;
+  background:url(../images/flags24.png) 0 0 no-repeat;
+}
+a.fl.uk { background-position:0 -280px; }
+.node a.cat
+{
+  background:-webkit-gradient(linear, left top, left bottom, from(#c00), to(#dd2222));
+  background:-moz-linear-gradient(top, #c00, #dd2222);
+  height:14px;
+  line-height:12px;
+  float:right;
+  font-size:9px;
+  color:#fff;
+  border-radius:2px;
+  -moz-border-radius:2px;
+  width:80px;
+  margin-left:-80px;
+  margin-top:-51px;
+  text-align:center;
+  text-decoration:none;
+}
+
+.node>.publisher {
+    background: url("../images/sources.gif") no-repeat scroll -75px -10px transparent;
+    display: block;
+    height: 40px;
+    margin: 0 auto;
+    overflow: hidden;
+    width: 50px;
+    text-indent: -100px;
+    float:left;
+}
+
+.node .submitted /* The "posted by" information */ {
+height:20px;
+margin-top:3px;
+float:left;
+font-size: 13px;
+}
+
+.node .content > img.big
+{
+  height:400px;
+  width:auto;
+  max-width:700px;
+  padding:1px;
+  background: #fff;
+  display: block;
+  border:1px solid #ccc;
+}
+
+.marker /* "New" or "Updated" marker for content that is new or updated for the current user */ {
+  color: #c00;
+}
+
+.node .picture /* The picture of the node author */ {
+}
+
+.node.node-unpublished .picture,
+.comment.comment-unpublished .picture {
+  position: relative; /* Otherwise floated pictures will appear below the "Unpublished" text. */
+}
+
+.node .meta /* Wrapper for submitted and terms data */ {
+}
+
+
+.node .terms /* Node terms (taxonomy) */ {
+}
+
+.node .content /* Node's content wrapper */ {
+  clear:both;
+}
+
+
+.node ul.links /* Node links. See also the ul.links declaration in the pages.css. */ {
+}
+
+.preview .node /* Preview of the content before submitting new or updated content */ {
+  /* background-color: #ffffea; */ /* Drupal core uses a #ffffea background */
+}

@@ -1,0 +1,230 @@
+#block-wtsnz2m-lastfpnews .views-row
+{
+  border:1px solid #e1e1e1;
+  -moz-border-radius:3px;
+  border-radius:3px;
+  list-style:none;
+  list-style-image:none;
+  height:90px;
+  margin:0 0 15px;
+  padding:0;
+}
+
+#block-wtsnz2m-lastfpnews .views-row > div
+{
+  float:left;
+  height:90px;
+  overflow:hidden;
+}
+
+#block-wtsnz2m-lastfpnews .time b
+{
+  font-weight:400;
+  font-size:9px;
+  line-height:9px;
+  display:block;
+}
+
+#block-wtsnz2m-lastfpnews .time cite
+{
+  font-style:normal;
+  display:block;
+  margin-top:40px;
+  font-weight:700;
+  font-size:20px;
+  font-family:Helvetica;
+}
+
+#block-wtsnz2m-lastfpnews .time
+{
+  background:url(../images/repeat-x.png) center -396px no-repeat #f2f2f2;
+  width:58px;
+  text-align:center;
+}
+
+#block-wtsnz2m-lastfpnews .views-row > div.category
+{
+  width:86px;
+  border:dotted #e1e1e1;
+  border-width:0 1px 0 1px;
+  text-align:center;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.category a
+{
+  display:block;
+  font-size:10px;
+  text-align:center;
+  color:#8F8F8F;
+  height:14px;
+  overflow:hidden;
+  margin:0 7px;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.category a.c
+{
+  float:none;
+  margin-top:12px;
+  padding:0;
+}
+
+#block-wtsnz2m-lastfpnews .views-row > div.content > *
+{
+  margin: 0 15px;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content.img > *
+{
+  margin-left:100px;
+}
+
+#block-wtsnz2m-lastfpnews .views-row > div.content h3 a
+{
+  text-decoration:none;
+  font-size:18px;
+  font-weight:normal;
+  color:#bc0000;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content h3
+{
+  margin-top:10px;
+  margin-bottom:0;
+  height:21px;
+}
+
+#block-wtsnz2m-lastfpnews .views-row > div.content > span img
+{
+  min-height:70px;
+  height:auto;
+  min-width:70px;
+  background:red;
+  display:block;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content.img > span
+{
+  border:1px solid #ededed;
+  padding:1px;
+  background:#fff;
+  width:70px;
+  height:70px;
+  overflow:hidden;
+  float:left;
+  margin:10px -80px 0 12px;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content  p
+{
+  height:34px;
+  line-height:16px;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content  cite > span
+{
+  padding:0 5px;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content  cite
+{
+  font-size:10px;
+  font-style:normal;
+  display:block;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content  cite a.fl
+{
+  float:right;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.content
+{
+  font-size:12px;
+  color:#565656;
+  width:530px;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.score
+{
+  width:49px;
+  border-left:1px dotted #e1e1e1;
+}
+
+#block-wtsnz2m-lastfpnews .views-row > div.score 
+{
+  background:url(../images/repeat-x.png) 11px -298px no-repeat #f2f2f2;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.score >  *
+{
+  display:block;
+  background-image:url(../images/repeat-x.png);
+  background-repeat:no-repeat;
+  background-position:-1000px 0;
+  height:20px;
+  width:26px;
+  overflow:hidden;
+  margin:13px 0 0 12px;
+  position:absolute;
+  cursor:pointer;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.score b
+{
+}
+#block-wtsnz2m-lastfpnews .views-row > div.score i /* comments */
+{
+margin-top:33px;
+}
+#block-wtsnz2m-lastfpnews .views-row > div.score u /* share */
+{
+margin-top:57px;
+}
+#block-wtsnz2m-lastfpnews .sort,
+#block-wtsnz2m-lastfpnews .more
+{
+background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.97, rgb(239,239,239)),
+    color-stop(0.04, rgb(218,218,218))
+);
+background-image: -moz-linear-gradient(
+    center top,
+    rgb(239,239,239) 0%,
+    rgb(218,218,218) 100%
+);
+border-radius:2px;
+-moz-border-radius:2px;
+-webkit-border-radius:2px;
+border:1px solid #e6e6e6;
+display:block;
+height:43px;
+line-height:43px;
+margin:20px 0;
+}
+#block-wtsnz2m-lastfpnews .sort > *
+{
+  float:left;
+  height:43px;
+  border:1px dotted #cfcfcf;
+  border-width:0 1px 0 0 ;
+  cursor:pointer;
+  font-size:10px;
+  color:#000;
+  font-weight:100;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-style: normal;
+  text-align:center;
+}
+#block-wtsnz2m-lastfpnews .sort > b
+{
+  width:58px;
+}
+#block-wtsnz2m-lastfpnews .sort > i
+{
+  width:86px;
+}
+#block-wtsnz2m-lastfpnews .sort > u
+{
+  float:right;
+  width:49px;
+  border-width: 0 0 0 1px;
+}
+
+#block-wtsnz2m-lastfpnews .more
+{
+text-decoration: none;
+font-size: 18px;
+color:#3d3d3d;
+text-align: center;
+}

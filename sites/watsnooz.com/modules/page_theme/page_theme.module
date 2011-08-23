@@ -1,0 +1,185 @@
+<?php
+// $Id: page_theme.module,v 1.1.2.11 2010/09/30 13:22:52 flanker Exp $
+
+/**
+ * @file
+ * This module allows to use different themes than the site default on specific
+ * pages.
+ */
+
+
+/**
+ * Implementation of hook_help().
+ */
+function page_theme_help($path, $arg) {
+
+  switch ($path) {
+
+    case 'admin/help#page_theme':
+      $output = '<p>'. t('The <em>Page Theme</em> module is a simple and easy module to use which allows you to use different themes than the site default on specific pages.') .'</p>';
+      $output .= '<p>'. t('For more information, see the online handbook entry for <a href="@page_theme">Page Theme module</a>.', array('@page_theme' => 'http://drupal.org/project/page_theme')) .'</p>';
+      return $output;
+
+    case 'admin/build/page-theme':
+      $output = '<p>'. t('If pages are several defined, the first theme in the list will be used.') .'</p>';
+      return $output;
+  }
+}
+
+
+/**
+ * Implementation of hook_perm().
+ */
+function page_theme_perm() {
+
+  $perm = array();
+  $perm[] = 'administer page theme';
+
+  return $perm;
+}
+
+
+/**
+ * Implementation of hook_menu().
+ */
+function page_theme_menu() {
+
+  $menu = array();
+  $menu['admin/build/page-theme'] = array(
+    'title' => 'Page theme',
+    'description' => 'Configure which theme is used on which pages.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('page_theme_admin_overview'),
+    'access arguments' => array('administer page theme'),
+    'file' => 'page_theme.admin.inc',
+  );
+  $menu['admin/build/page-theme/overview'] = array(
+    'title' => 'Overview',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $menu['admin/build/page-theme/add'] = array(
+    'title' => 'Add theme',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('page_theme_admin_add'),
+    'access callback' => 'page_theme_menu_access_add',
+    'access arguments' => array('administer page theme'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'page_theme.admin.inc',
+  );
+  $menu['admin/build/page-theme/edit/%page_theme'] = array(
+    'title' => 'Edit theme',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('page_theme_admin_edit', 4),
+    'access arguments' => array('administer page theme'),
+    'type' => MENU_CALLBACK,
+    'file' => 'page_theme.admin.inc',
+  );
+  $menu['admin/build/page-theme/delete/%page_theme'] = array(
+    'title' => 'Delete theme',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('page_theme_admin_delete', 4),
+    'access arguments' => array('administer page theme'),
+    'type' => MENU_CALLBACK,
+    'file' => 'page_theme.admin.inc',
+  );
+
+  return $menu;
+}
+
+function page_theme_menu_access_add($perm) {
+
+  $theme_options = page_theme_get_theme_options();
+  return user_access($perm) && count($theme_options) > 1;
+}
+
+function page_theme_load($theme) {
+
+  $result = db_query('SELECT theme, pages, status, weight FROM {page_theme} WHERE theme = "%s"', $theme);
+  return db_fetch_object($result);
+}
+
+
+/**
+ * Implementation of hook_theme().
+ */
+function page_theme_theme() {
+
+  $theme = array();
+  $theme['page_theme_admin_overview'] = array(
+    'arguments' => array('form' => NULL),
+    'file' => 'page_theme.admin.inc',
+  );
+
+  return $theme;
+}
+
+
+/**
+ * Implementation of hook_init().
+ */
+function page_theme_init() {
+
+  $path = drupal_get_path_alias($_GET['q']);
+
+  $result = db_query('SELECT theme, pages FROM {page_theme} WHERE status = 1 ORDER BY weight, theme');
+  while ($page_theme = db_fetch_object($result)) {
+
+    $page_match = drupal_match_path($path, $page_theme->pages);
+    if ($path != $_GET['q']) {
+      $page_match = $page_match || drupal_match_path($_GET['q'], $page_theme->pages);
+    }
+
+    if ($page_match) {
+      global $custom_theme;
+      $custom_theme = $page_theme->theme;
+      return;
+    }
+  }
+}
+
+
+/**
+ *  Helper functions.
+ */
+function page_theme_get_theme_options() {
+
+  static $options = array();
+
+  if (!$options) {
+
+    $themes = page_theme_get_themes();
+
+    $result = db_query('SELECT theme FROM {page_theme}');
+    while ($page_theme = db_fetch_object($result)) {
+      unset($themes[$page_theme->theme]);
+    }
+
+    $options['0'] = '- '. t('Select theme') .' -';
+    $options += $themes;
+  }
+
+  return $options;
+}
+
+function page_theme_get_themes($theme = NULL) {
+
+  static $themes = array();
+
+  if (!$themes) {
+
+    foreach (system_theme_data() as $theme_data) {
+
+      $compatible_core = isset($theme_data->info['core']) && $theme_data->info['core'] == DRUPAL_CORE_COMPATIBILITY;
+      $compatible_php = version_compare(phpversion(), $theme_data->info['php'], '>=');
+
+      if ($compatible_core && $compatible_php) {
+        $themes[$theme_data->name] = $theme_data->info['name'];
+      }
+    }
+
+    asort($themes);
+  }
+
+  return !is_null($theme) ? $themes[$theme] : $themes;
+}

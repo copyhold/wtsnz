@@ -1,0 +1,4 @@
+name = Watsnooz moodule
+description = do the job
+package = Other
+core = 6.x

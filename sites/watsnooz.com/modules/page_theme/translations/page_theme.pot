@@ -1,0 +1,158 @@
+# $Id: page_theme.pot,v 1.1.2.2 2010/09/30 18:15:23 flanker Exp $
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  page_theme.admin.inc,v 1.1.2.16 2010/09/30 13:50:23 flanker
+#  page_theme.module,v 1.1.2.11 2010/09/30 13:22:52 flanker
+#  page_theme.info,v 1.1.2.5 2010/09/30 13:56:29 flanker
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2010-09-30 20:13+0200\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: page_theme.admin.inc:40
+msgid "edit"
+msgstr ""
+
+#: page_theme.admin.inc:43
+msgid "delete"
+msgstr ""
+
+#: page_theme.admin.inc:56
+msgid "Save configuration"
+msgstr ""
+
+#: page_theme.admin.inc:59;157;224
+msgid "Cancel"
+msgstr ""
+
+#: page_theme.admin.inc:87;125;195
+msgid "Theme"
+msgstr ""
+
+#: page_theme.admin.inc:88;133;200
+msgid "Pages"
+msgstr ""
+
+#: page_theme.admin.inc:89;143;210
+msgid "Enabled"
+msgstr ""
+
+#: page_theme.admin.inc:90;148;215
+msgid "Weight"
+msgstr ""
+
+#: page_theme.admin.inc:91
+msgid "Operations"
+msgstr ""
+
+#: page_theme.admin.inc:98
+msgid "No themes defined."
+msgstr ""
+
+#: page_theme.admin.inc:113
+msgid "The configuration has been saved."
+msgstr ""
+
+#: page_theme.admin.inc:126
+msgid "Choose which theme the page should display in."
+msgstr ""
+
+#: page_theme.admin.inc:134;201
+msgid "Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page."
+msgstr ""
+
+#: page_theme.admin.inc:140;207
+msgid "Status"
+msgstr ""
+
+#: page_theme.admin.inc:154 page_theme.module:62
+msgid "Add theme"
+msgstr ""
+
+#: page_theme.admin.inc:166
+msgid "Please select a theme."
+msgstr ""
+
+#: page_theme.admin.inc:178
+msgid "The theme has been added."
+msgstr ""
+
+#: page_theme.admin.inc:221
+msgid "Update theme"
+msgstr ""
+
+#: page_theme.admin.inc:238
+msgid "The theme has been updated."
+msgstr ""
+
+#: page_theme.admin.inc:253
+msgid "Are you sure you want to delete the theme %theme?"
+msgstr ""
+
+#: page_theme.admin.inc:266
+msgid "The theme has been deleted."
+msgstr ""
+
+#: page_theme.module:19
+msgid "The <em>Page Theme</em> module is a simple and easy module to use which allows you to use different themes than the site default on specific pages."
+msgstr ""
+
+#: page_theme.module:20
+msgid "For more information, see the online handbook entry for <a href=\"@page_theme\">Page Theme module</a>."
+msgstr ""
+
+#: page_theme.module:24
+msgid "If pages are several defined, the first theme in the list will be used."
+msgstr ""
+
+#: page_theme.module:158
+msgid "Select theme"
+msgstr ""
+
+#: page_theme.module:36
+msgid "administer page theme"
+msgstr ""
+
+#: page_theme.module:49
+msgid "Page theme"
+msgstr ""
+
+#: page_theme.module:50
+msgid "Configure which theme is used on which pages."
+msgstr ""
+
+#: page_theme.module:57
+msgid "Overview"
+msgstr ""
+
+#: page_theme.module:71
+msgid "Edit theme"
+msgstr ""
+
+#: page_theme.module:79
+msgid "Delete theme"
+msgstr ""
+
+#: page_theme.info:0
+msgid "Page Theme"
+msgstr ""
+
+#: page_theme.info:0
+msgid "Allows to use different themes than the site default on specific pages."
+msgstr ""
+
+#: page_theme.info:0
+msgid "Theme related"
+msgstr ""
+

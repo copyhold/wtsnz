@@ -1,0 +1,38 @@
+--- a/supercron-main.inc
++++ b/supercron-main.inc
+@@ -2,7 +2,6 @@
+ 
+ include_once(drupal_get_path('module', 'supercron') . '/supercron.inc');
+ 
+-
+ /**
+  * Implement hook_help().
+  */
+@@ -213,15 +212,14 @@
+     if ($execute) _supercron_parallel_call(url(supercron_autocron_url(), array('absolute'=>TRUE)));
+ }
+ 
+-
+ function supercron_base_path() {
+   global $base_path;
+-
+-  return str_replace('/index.php', '', $_SERVER['SCRIPT_FILENAME']) . $base_path;
++  return $base_path . drupal_get_path('module', 'supercron') . '/' . SUPERCRON_SCRIPT_NAME ;
+ }
+ 
+ function supercron_standard_path() {
+-  return supercron_base_path() . SUPERCRON_SCRIPT_NAME;
++  global $base_path;
++  return $base_path . SUPERCRON_SCRIPT_NAME ;
+ }
+ 
+ function supercron_get_script_URL() {
+@@ -246,7 +244,7 @@
+     return supercron_standard_path();
+   }
+   elseif ($script_path == SUPERCRON_SCRIPT_PATH_MODULE_ROOT) {
+-    return str_replace('supercron.module', '', realpath(__FILE__)) . SUPERCRON_SCRIPT_NAME;
++    return supercron_base_path();
+   }
+   else {
+     return '';

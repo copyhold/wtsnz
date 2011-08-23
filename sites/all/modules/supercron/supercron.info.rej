@@ -1,0 +1,7 @@
+--- a/supercron.info
++++ b/supercron.info
+@@ -4,3 +4,4 @@
+ core = 6.x
+ version = 6.x-1.4-alpha
+ php = 5.0
++depends[] = dblog

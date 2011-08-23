@@ -1,0 +1,28 @@
+b.c { position:absolute; z-index:1000; height:2px; width:2px;font-size: 2px; line-height:2px; overflow:hidden; }
+b.c b { width:1px ; height:1px; position:absolute; z-index:1001; }
+b.c .b1 { margin:0 0 0 1px ; }
+b.c .b2 { margin:1px 0 0 0 ; }
+b.c .b3 { margin:1px 0 0 1px ; }
+b.c.tr .b1 { margin:0 ; }
+b.c.tr .b2 { margin:1px 0 0 1px ; }
+b.c.tr .b3 { margin:1px 0 0 0px ; }
+
+b.c.bl .b1 { margin:1px 0 0 1px ; }
+b.c.bl .b2 { margin:0 ; }
+b.c.bl .b3 { margin:0 0 0 1px ; }
+b.c.br .b1 { margin:0 0 0 1px; }
+b.c.br .b2 { margin:1px 0 0 0px ; }
+b.c.br .b3 { margin:0 ; }
+
+#navigation>b.c .b3 { background-color:#efefef; }
+#navigation>b.c .b1 , #navigation>b.c .b2 { background-color:#f3f3f3; }
+#navigation>b.bl .b3 , #navigation>b.br .b3 { background-color:#dadada; }
+#navigation>b.c { background-color:#fafafa; }
+#navigation .active-trail a>b.c .b3 { background-color:#fff; }
+#navigation .active-trail a>b.c .b1 , #navigation .active-trail a b.c .b2 { background-color:#fafafa; }
+#navigation .active-trail a>b.c { background-color:#f3f3f3; }
+
+#block-views-lastminute-block_1 .views-field-tid-1 a>b.c { background-color:#f7f7f7;}
+#block-views-lastminute-block_1 .views-field-tid-1 a>b.c .b1 { background-color:#e5e5e5;}
+#block-views-lastminute-block_1 .views-field-tid-1 a>b.c .b2 { background-color:#e1e1e1;}
+#block-views-lastminute-block_1 .views-field-tid-1 a>b.c .b3 { background-color:#f4f4f4;}

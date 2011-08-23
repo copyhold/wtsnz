@@ -1,0 +1,200 @@
+/* $Id: comments.css,v 1.5 2009/11/01 20:54:20 johnalbin Exp $ */
+
+/**
+ * @file
+ * Comment Styling
+ */
+#comment
+{
+padding:0 0 44px 0;
+border-bottom:1px solid #d4d4d4;
+margin-bottom:20px;
+}
+#comment textarea
+{
+width:505px;
+height:160px;
+float:left;
+}
+#comment button
+{
+width:156px;
+height:30px;
+line-height:30px;
+text-align:center;
+border:none;
+background:url(../images/comment-button.png) 0 0 no-repeat;
+font-size:15px;
+color:#fff;
+font-family:"helvetica";
+text-shadow:-1px -1px 0 #999;
+margin:136px 0 0 17px;
+}
+#comments /* Wrapper for the list of comments and its title */ {
+  margin:38px 0 0 0;
+  padding:24px 0 0 0;
+  border-top:1px solid #d4d4d4;
+}
+#comments > h3 
+{
+margin:0 0 19px 0;
+font-size:21px;
+font-weight:normal;
+}
+#comments .title /* Heading for the list of comments */ {
+}
+
+div.comment /* Wrapper for a single comment */ {
+clear:both;
+min-height:60px;
+margin:0 0 10px 0;
+font-size:11px;
+color:#555;
+line-height:19px;
+}
+
+.comment-preview /* Preview of the comment before submitting new or updated comment */ {
+}
+
+.comment.new /* A new comment since the user last viewed the page. */ {
+}
+
+.comment.first /* The first comment in the list of comments */ {
+}
+
+.comment.last /* The last comment in the list of comments */ {
+}
+
+.comment.odd /* An odd-numbered comment in the list of comments */ {
+}
+
+.comment.even /* An even-numbered comment in the list of comments */ {
+}
+
+.comment-unpublished /* Unpublished comments */ {
+  /* background-color: #fff4f4; */ /* Drupal core uses a #fff4f4 background */
+}
+
+.comment-unpublished div.unpublished /* The word "Unpublished" displayed underneath the content. See also the div.unpublished declaration in the nodes.css. */ {
+}
+
+.comment-by-anonymous /* A comment created by an anonymous user */ {
+}
+
+.comment-by-node-author /* A comment created by the node's author */ {
+}
+
+.comment-by-viewer /* A comment created by the current user */ {
+}
+
+.comment h3.title /* Comment title */ {
+}
+
+.new /* "New" marker for comments that are new for the current user */ {
+  color: #c00;
+}
+.node .comment > div
+{
+float:none;
+margin:0 0 0 74px;
+}
+.node .comment .picture /* The picture of the comment author */ {
+width:58px;
+float:left;
+margin:0 -58px 0 0 ;
+}
+
+.comment .submitted /* The "posted by" information */ {
+border-bottom:1px dotted #b1b1b1;
+height:20px;
+line-height:16px;
+font-size:12px;
+}
+.comment .submitted span
+{
+cursor:pointer;
+color:#bc0000;
+}
+.comment .submitted a
+{
+font-weight:bold;
+text-decoration:none;
+color:#bc0000;
+}
+
+.comment .vud-widget-updown
+{
+float:right;
+width:auto;
+padding:0;
+height:17px;
+overflow:hidden;
+}
+.comment .updown-down,
+.comment .updown-up,
+.comment .vud-widget-updown div.updown-score
+{
+border:none;
+background:url(../images/repeat-x.png) 0 -710px no-repeat;
+height:17px;
+padding:0;
+font-size:14px;
+line-height:16px;
+}
+.comment .updown-down,
+.comment .updown-up
+{
+text-indent:-1000px;
+overflow:hidden;
+width:17px;
+}
+.comment .vud-widget .ctools-ajaxing
+{
+border:none;
+background-position:2px 2px;
+}
+.comment .updown-down
+{
+background-position:0 -727px;
+}
+.comment .vud-widget-updown div.updown-score span
+{
+background:url(../images/repeat-x.png) 100% -761px no-repeat;
+height:17px;
+display:block;
+padding:0 3px 0 1px;
+COLOR:#fff;
+font-size:12px;
+}
+.comment .vud-widget-updown div.updown-score
+{
+float:right;
+background-position:0 -744px;
+margin:0 2px 0 10px;
+padding:0 0  0 2px;
+color:#fff;
+}
+.vud-widget-updown .updown-score .updown-current-score
+{
+font-size:14px;
+}
+.comment .content /* Comment's content wrapper */ {
+clear:none;
+}
+.comment .content p
+{
+margin:0 0 5px 0;
+}
+.comment .user-signature /* The user's signature */ {
+}
+
+.comment ul.links /* Comment links. See also the ul.links declaration in the pages.css. */ {
+}
+
+.indented /* Nested comments are indented */ {
+  /* margin-left: 25px; */ /* Drupal core uses a 25px left margin */
+}
+
+.preview .comment /* Preview of the comment before submitting new or updated comment */ {
+  /* background-color: #ffffea; */ /* Drupal core uses a #ffffea background */
+}

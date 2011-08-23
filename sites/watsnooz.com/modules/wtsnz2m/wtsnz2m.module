@@ -1,0 +1,417 @@
+<?php
+function wtsnz2m_menu() {
+  return array(
+  'ajaxget'     => array('page callback'=>'wtsnz2m_ajaxian','access callback'=>1,'type'=>MENU_CALLABACK),
+  'getcityauto' => array('page callback'=>'wtsnz2_autocomplete_city','access callback'=>1,'type'=>MENU_CALLABACK),
+  'ajaxweather' => array('file'=>'inc/geoipcity.inc','page callback'=>'wtsnz2m_weather_json','access arguments'=>array('access content'),'title'=>'Get weather feed proxy'),
+  'updatestocks' => array('page callback'=>'wtsnz2m_update_stocks','access arguments'=>array('access content'),'type'=>MENU_CALLBACK),
+  );
+}
+
+function wtsnz2m_update_stocks() {
+  // http://www.gummy-stuff.org/Yahoo-data.htm
+  //http://pipes.yahoo.com/pipes/pipe.info?_id=dc76d8c1bd380036fb281050cf762ef6
+  if ($_POST && $_POST['symbol']) {
+  //а у нас его нету?
+  //если нету,то скачать и спрятать в базу
+  $data = db_fetch_object(db_query('select * from quotes where symbol=\'%s\'',$_POST['symbol']));
+  if (!$data) {
+    $data = str_getcsv(file_get_contents('http://finance.yahoo.com/d/quotes.csv?s='.$symbol.'&f=sl1j6'));
+    if ($data[2]=='N/A') { // no support 4 this symbol
+      
+    }
+  }
+  //отдать запрошенный символ
+  } else {
+    $f = file('http://finance.yahoo.com/d/quotes.csv?s=XOM+BBDb.TO+JNJ+MSFT&f=sl1j6');
+    foreach ($f as $l) {
+      
+    }
+  }
+}
+function wtsnz2_autocomplete_city() {
+  echo "ghjkl\nertyui\ndfghjk";
+  exit();
+}
+
+function wtsnz2m_ajaxian() {
+  if (!$_POST['function']) return null;
+  $functionName = '_wtsnz2_'.$_POST['function'];
+  if (!function_exists($functionName)) {
+    return null;
+  }
+  $result = call_user_func_array($functionName,array($_POST));
+  drupal_json(array('content'=>$result));
+  exit();
+}
+function _wtsnz2_getusersettings() {
+  global $user;
+  $settings['user'] = array('uid'=>$user->uid,'name'=>$user->username);
+  if (user_access('post comments')) $settings['run'][] = 'commentsform';
+  return $settings;
+}
+function _wtsnz2_postcomment() {
+  global $user;
+  if (!user_access('post comments')) return null;
+  
+  if ($ref=$_SERVER['HTTP_REFERER']) {
+    $path = drupal_get_normal_path(trim(urldecode(parse_url($ref,PHP_URL_PATH)),'/'));
+    if (!preg_match('~^node/(\d+)$~',$path,$matches)) return;
+    $nid = $matches[1];
+  } else {
+//    no referer... hmm.... might be attack
+    die('<!-- spammer -->');
+  }
+  $node = (object)array('nid'=>$nid);
+  $cid=comment_save(array(
+     'nid'=>$nid,
+     'uid'=>$user->uid,
+     'comment' => $_POST['comment'],
+     'format' => 2,
+     'timestamp' => $_SERVER['REQUEST_TIME'],
+     'status' =>1,
+     'name'=>$user->name,
+     'mail'=>$user->mail,
+     'status' => 0,
+    ));
+    if ($cid) {
+      $comment = _comment_load($cid);
+      return array(
+      'cid'=>$cid,
+      'name'=>$user->name,
+      'comment'=>theme('comment_view',$comment,$node,null,1),
+      );
+  } else {
+    return null;
+  }
+  
+}
+
+function wtsnz2m_weather_json($echo=1, $reset=1) {
+  if (php_uname('n')!='vps10082401.softsoft.org') $_SERVER['REMOTE_ADDR'] = $_SERVER['HTTP_X_REAL_IP'] = '75.178.34.158';
+  
+  
+  $gi = geoip_open(drupal_get_path('module','wtsnz2m').'/inc/GeoLiteCity.dat',GEOIP_STANDARD);
+  if ($_GET['city'] && $_GET['city']!='current') {
+    $geoip = geoip_country_id_by_name();
+  }
+  $geoip = geoip_record_by_addr($gi,$_SERVER['HTTP_X_REAL_IP']);
+  $citykey = 'weather:' . $geoip->city .':'.date('y.m.d');
+  $countrykey = 'weather:' . $geoip->country_name .':'.date('y.m.d');
+  if (!$reset && $data=cache_get($citykey.'l'));
+  elseif (!$reset && $data=cache_get($countrykey));
+  else {
+    $data = @file_get_contents('http://www.worldweatheronline.com/feed/weather.ashx?q='.$_SERVER['HTTP_X_REAL_IP'].'&format=json&num_of_days=5&key=9bd2ef3e95065929102707');
+    if (!$data) $data = file_get_contents(drupal_get_path('module','wtsnz2m').'/inc/defaultweather.data');
+    cache_set($citykey,$data,'cache',time()+86400);
+    cache_set($countrykey,$data,'cache',time()+86400);
+  }
+  if (is_object($data)) $data = $data->data;
+  $data = json_decode($data);
+  $data->location = $geoip;
+  $data->data->current_condition[0]->weatherIconUrl[0]->value = basename($data->data->current_condition[0]->weatherIconUrl[0]->value);
+  foreach ($data->data->weather as $k=>$v) {
+    $data->data->weather[$k]->weatherIconUrl[0]->value = basename($v->weatherIconUrl[0]->value);
+    $date = strtotime($v->date);
+    $data->data->weather[$k]->dayofweek = date('w',$date);
+  }
+  //$data->req = $_SERVER;
+  if ($echo) {
+    return drupal_json($data);
+  } else return $data;
+}
+function wtsnz2m_cron() {
+  $nodes = db_query('select * from content_type_feed_item where field_fi_postdate_value is not null');
+  while ($n=db_fetch_object($nodes)) {
+    db_query('update node set created=%d where nid=%d',strtotime($n->field_fi_postdate_value),$n->nid);
+    db_query('update content_type_feed_item set field_fi_postdate_value=NULL where nid=%d',$n->nid);
+  }
+}
+function wtsnz2m_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'load':
+      if ($node->type=='feed_item') {
+        $parentfeed = node_load($node->feeds_node_item->feed_nid);
+        $node->parenttaxo = $parentfeed->taxonomy;
+        $r = db_query('
+select nid,created,title
+from {node} 
+where nid in 
+  (
+  select distinct tn1.nid 
+  from {term_node} tn1 
+  inner join {term_node} tn 
+    using (tid) 
+  where tn.nid=%d and tn1.nid<>%d) order by created desc limit 3',$node->nid,$node->nid);
+        $node->related = array();
+        while ($rr=db_fetch_object($r)) {
+        	$node->related[$rr->nid] = $rr;
+        }
+      }
+      break;
+    case 'insert':
+      if ($node->type=='feed_item' && $node->is_new) {
+        $path = $node->field_fi_origurl[0]['value'];
+        if (preg_match('~^http.*yahoo.*\*(http:.)$~',$node->field_fi_origurl[0]['value'],$matches)) {
+          $node->field_fi_origurl[0]['value'] = $matches[1];
+        }
+        $ch = curl_init();
+        curl_setopt_array($ch,array(
+        CURLOPT_URL=>'http://127.0.0.1/'.$node->field_fi_origurl[0]['value'],
+        CURLOPT_HEADER=>0,
+        CURLOPT_RETURNTRANSFER=>1,
+        CURLOPT_PORT=>8888
+        ));
+        $query = curl_exec($ch);
+        if (is_numeric($query)) {
+          watchdog('FEEDABILITY',$node->field_fi_origurl[0]['value'] . ' Added task number '.$query);
+        } else {
+          watchdog('FEEDABILITY',$node->field_fi_origurl[0]['value'] . ' error adding to query',WATCHDOG_ERROR);
+        }
+        return ; 
+      }
+      break;
+    case 'presave':
+      if ($node->type=='feed_item') {
+        if (!empty($node->field_fi_postdate[0]['value'])) {
+          $node->created = strtotime($node->field_fi_postdate[0]['value']);
+          unset($node->field_fi_postdate[0]['value']);
+        }
+      }
+      break;
+    case 'view':
+      if ($node->type=='feed_item') {
+        $node->country = current(array_filter($node->taxonomy,create_function('$v','if ($v->vid==4) return true;else return false;')));
+      }
+      if ($node->comment_count>0) {
+        $node->content['comments'] = array(
+        '#value'=>comment_render($node),
+        '#weight'=>100);
+      } else {
+        $node->content['comments'] = array(
+        '#value'=>'<div id="comments"><h3>'.t('Add comment').'</h3></div>',
+        '#weight'=>100);
+      }
+      if ($node->related) {
+        
+        $node->content['related'] = array(
+        '#value' => theme('noderelated',$node->related),
+        '#weight' => 99,
+        );
+      }
+      break;
+  }
+}
+
+function theme_noderelated($related=array()) {
+  if (!count($related)) return '';
+  $out = '<div id="related">';
+  while ($r=array_shift($related)) {
+    $out .= l(truncate_utf8($r->title,60,true) . '<span>' . substr(date('l',$row->node_created),0,3) . date(' M d,g:i A',$row->node_created) . '</span>','node/'.$r->nid, array('html'=>1));
+  }
+  return $out . '</div>';
+}
+
+function _wtsnz_mostsearches() {
+  return 'Cheap viagra';
+}
+
+function wtsnz2m_block($op='view',$delta=0,$edit=null) {
+  switch ($op) {
+    case 'list':
+      return array(
+          'weather'     => array('info' => 'Weather forecast'),
+          'lastfpnews'  => array('info' => 'Last news block 4 front page', 'pages' => '<front>'),
+          'categories'  => array('info' => 'Categories block'),
+          'hottopics'   => array('info' => 'Hot topics block'),
+          'filter'      => array('info' => 'Sidebar complex filter'),
+      );
+      break;
+    case 'view':
+      switch ($delta) {
+        case 'filter':
+          return array('subject'=>t('news filter'),'content'=>'countries');
+          break;
+        case 'categories':
+          $list = array(
+            l(t('Latest News'),'<front>'),
+            array(l(t('Hot Topics') . '<b></b>','hot-topics',array('html'=>true)),'class'=>'second'),
+          );
+          $taxo = db_query('select * from {term_data} where vid=%d Order by name ASC',wtsnz::CATEGORIESVID);
+          while ($t=  db_fetch_object($taxo)) {
+            $list[] = array(l($t->name,'taxonomy/term/'.$t->tid),'class'=>'row-'.$t->tid);
+          }
+          return array('subject'=>t('Latest News'),'content'=>theme('item_list',$list));
+          break;
+        case 'hottopics':
+          $t = db_query('select name,td.tid,count(1) counter from {term_node} tn inner join {term_data} td on td.tid=tn.tid where td.vid=%d group by td.name order by counter desc limit 5',wtsnz::TERMSVID);
+          while ($term=db_fetch_object($t)) {
+            $hott .= l($term->name,'taxonomy/term/'.$term->tid);
+          }
+          return array('subject'=>'','content'=>'<div><h2>'.t('hot topics').'</h2><p>'.$hott.'</p><h2>'.t('Sponsored').'</h2><p class="gadd">Luxury cars</p></div>' . l(t('submit a story'),'node/add/feed-item'));
+          break;
+        case 'lastfpnews':
+          return array('subject'=>'<none>','content'=>_wtsnz2_restonfpblock(array('page'=>0,'url'=>$_GET['q'])));
+          break;
+        case 'weather':
+          drupal_add_js(drupal_get_path('module','wtsnz2m').'/jquery.autocomplete.pack.js');
+          drupal_add_js(array('weather'=>array('iconspath' => drupal_get_path('module','wtsnz2m').'/icons')),'setting');
+          return array('subject'=>t('Weather Forecast'),'content'=>'<div id="weather" class="wait">'.t('loading weather data'). '</div>');
+          break;
+      }
+      break;
+  }
+}
+/**
+ * $arg array(
+ * 'function'=>'restonfpblock',
+ * 'page' => (int) > 0
+ * 'url' => 'someURL' (alias for taxonomy/term/TID)
+ * )
+ *
+ */
+function _wtsnz2_restonfpblock($arg) {
+  $url = drupal_get_normal_path(trim($arg['url'],'/'),$GLOBALS['language']->language);
+
+  if (preg_match('~^taxonomy/term/(\d+)$~',$url,$matches)) {
+    $children = db_result(db_query('select group_concat(tid) from {term_hierarchy} where parent=%d',$matches[1]));
+    if ($children) {
+      $cond = join(',',array($children,$matches[1]));
+      $filter = ' AND tn.tid in ('. $cond . ') ';
+    } else {
+      $filter = ' AND tn.tid='.$matches[1] . ' ';
+    }
+  } else {
+    $filter = '';
+  }
+  
+  $q = '
+SELECT GROUP_CONCAT(nid SEPARATOR \'+\') 
+FROM (
+SELECT DISTINCT fni.nid
+FROM {feeds_node_item} fni
+INNER JOIN {term_node} tn
+USING ( nid )
+INNER JOIN {term_data} td
+USING ( tid )
+INNER JOIN {node} n ON n.nid = fni.nid
+WHERE 1' . $filter . '
+ORDER BY n.created DESC
+LIMIT %d , 5) s';
+  $args = db_result(db_query($q,$arg['page'] * 5));
+  $view = views_get_view('restonfp');
+  $content = $view->execute_display('block_1',array($args));
+  return $content['content'];
+}
+
+function wtsnz2m_feeds_after_parse(FeedsImporter $importer, FeedsSource $source) {
+  if ($source->batch->getItemCount()) {
+    $raw = $source->batch->getRaw();
+    _feed_getMedia(null,$raw);
+    switch ($source->id) {
+      case 'feed':
+        while ($item = $source->batch->shiftItem()) {
+          $item['author_name'] = _feed_getMedia($item['guid']);
+          $items[] = $item;
+        }
+        $source->batch->setItems($items);
+        break;
+    }
+  }
+
+}
+
+function _feed_getMedia($guid,$xmlString=null) {
+  static $xml=null;
+  if ($xmlString) $xml = simplexml_load_string($xmlString);
+  if (!$xml || !$guid) return null;
+  $item = current($xml->xpath('//item[guid="'.$guid.'"]'));
+  if (!$item) return '';
+  $media = $item->xpath('enclosure/@url');
+  if (empty($media)) {
+    $media = $item->xpath('media:content/@url');
+  }
+  if (empty($media)) {
+    $media = $item->xpath('media:thumbnail/@url');
+  }
+  /** @todo
+   * find media if empty from description (<img tag)
+   */
+  if (is_array($media) && !empty($media)) return (string)$media[0]; 
+  return null;
+}
+
+function wtsnz2m_init(){
+//  require 'sites/all/libraries/facebook-php-sdk/src/facebook.php';
+//  $fbAppID      = '128059503941384';
+//  $fbAPIKey     = '4509576ae319814e1dba844189b3d97c';
+//  $fbAppSecret  = 'e61b8ecce8a689008c615f51093d7bdc';
+//  
+//  $facebook = new Facebook(array(
+//  'appId' => $fbAppID,
+//  'secret' => $fbAppSecret,
+//  ));
+//  
+//  $user = $facebook->getSession();
+//  if (!$user) {
+//    echo l('login to FB', $facebook->getLoginUrl(array('req_perms'=>'publish_stream','next'=>'http://f.watsnooz.com')));
+//  } else {
+//    echo l('log out from FB', $facebook->getLogoutUrl(array('next'=>'http://f.watsnooz.com')));
+//    $attachment =  array(
+//    'access_token' => $facebook->getAccessToken(),
+//    'message' => "Hello, here is a post",
+//    'name' => "sdf",
+//    'link' => "http://yahoo.com",
+//    'description' => "Write here your description",
+//    'picture'=> "http://img.timeinc.net/time/daily/2011/1106/77_weiner_b_0606.jpg");
+//    $r = $facebook->api('/me/feed', 'POST', $attachment);
+//  }
+  drupal_add_js(drupal_get_path('module','wtsnz2m') . '/wtsnzm.js');
+  require(drupal_get_path('module','wtsnz2m') . '/wtsnz.inc');
+  if ($_GET['q']=='node/add/feed-item') {
+      $GLOBALS['custom_theme'] = 'wtsnz2';
+  }
+}
+
+function wtsnz2m_user($type, $array, $user, $category) {
+  switch ($type) {
+    case 'load':
+      /**
+       * @todo assign a user to a publisher.
+       */
+      $user->publisher = taxonomy_get_term(799);
+      break;
+  }
+}
+function wtsnz2m_theme() {
+  return array(
+  'country' => array('country'=>null),
+  'noderelated' => array('related'=>null),
+  );
+}
+
+function wtsnz2m_preprocess_node($vars) {
+//  temporary
+  if ($vars['node']->country) {
+    $vars['country'] = (object)array(
+    'nativename'  => $vars['node']->country->description,
+    'code'        => $vars['node']->country->name,
+    );
+  }
+  $vars['score'] = 253;
+//  temporary
+  if ($vars['node']->parenttaxo) {
+    foreach ($vars['node']->parenttaxo as $taxo) {
+    	if ($taxo->vid==2) {
+    	  $vars['maincategory'] = $taxo;
+    	}
+    	if ($taxo->vid==3) {
+    	  $vars['publisher'] = $taxo;
+    	}
+    }
+  }
+  if ($vars['node']->content['comments']['#value']) $vars['comments'] = $vars['node']->content['comments']['#value'];
+}
+function theme_country($country) {
+  return l($country->nativename,'news/'.$country->code,array('attributes'=>array('class'=>'fl ' . $country->code,'title'=>$country->nativename)));
+}

@@ -1,0 +1,10 @@
+--- a/supercron.admin.rule.inc
++++ b/supercron.admin.rule.inc
+@@ -6,6 +6,7 @@
+  * Contains administrative configuration details for complex cron scheduling
+  */
+ 
++include_once(drupal_get_path('module', 'supercron') . '/supercron-main.inc');
+ 
+ function supercron_settings_rule_toolbox() {
+   $module_path = drupal_get_path('module', 'supercron');

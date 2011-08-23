@@ -1,0 +1,32 @@
+--- a/supercron.crontab-admin.inc
++++ b/supercron.crontab-admin.inc
+@@ -6,8 +6,10 @@
+  * Contains administrative configuration helper for Cron tasks
+  */
+ 
++include_once(drupal_get_path('module', 'supercron') . '/supercron-main.inc');
+ 
+-function supercron_invocation_form(&$form_state) {
++function supercron_invocation_form($form_state) {
++  global $base_path;
+   $module_path = drupal_get_path('module', 'supercron');
+   drupal_add_js("{$module_path}/js/ZeroClipboard.js");
+   drupal_add_js("{$module_path}/js/supercron.crontab.js");
+@@ -36,7 +38,7 @@
+     : $supercron_script_path,
+     '#options'   => array(
+       SUPERCRON_SCRIPT_PATH_DRUPAL_ROOT => t('Drupal root (@path)', array('@path' => supercron_standard_path())),
+-      SUPERCRON_SCRIPT_PATH_MODULE_ROOT => t('Module root (@path)', array('@path' => supercron_base_path() . drupal_get_path('module', 'supercron') . '/supercron.php')),
++      SUPERCRON_SCRIPT_PATH_MODULE_ROOT => t('Module root (@path)', array('@path' => supercron_base_path())),
+       SUPERCRON_SCRIPT_PATH_CUSTOM      => t('Other place')
+     ),
+   );
+@@ -100,8 +102,6 @@
+ }
+ 
+ function supercron_invocation_form_submit($form, &$form_state) {
+-  variable_set(SUPERCRON_THROTTLE_SUPPORT_VARIABLE, $form_state['values']['throttle']);
+-
+   if ($form_state['values'][SUPERCRON_SCRIPT_PATH] == SUPERCRON_SCRIPT_PATH_CUSTOM) {
+     variable_set(SUPERCRON_SCRIPT_PATH, $form_state['values'][SUPERCRON_SCRIPT_PATH . '_text']);
+   }

@@ -1,0 +1,95 @@
+/* $Id: navigation.css,v 1.5 2009/11/04 19:42:41 johnalbin Exp $ */
+
+/**
+ * @file
+ * Navigation Styling
+ */
+
+
+/*
+ * The active item in a Drupal menu
+ */
+li a.active {
+  color: #000;
+}
+
+/*
+ * Navigation bar
+ */
+#navigation {
+background:url(../images/repeat-x.png) 0 -33px repeat-x; 
+}
+#navigation .block { margin:0; padding:0 ; }
+#navigation a {
+height:56px; padding:0 21px; float:left; font:normal 16px/55px Helvetica; color:#767676; text-decoration:none; 
+}
+#navigation .active a {
+  background:url(../images/repeat-x.png) center -185px no-repeat #fff;
+  color:#000;
+}
+.region-navigation {
+}
+#admin-menu { top:40%; left:-98%; height:30px; position:fixed; }
+#admin-menu:hover { left:0; }
+/*
+ * Primary and Secondary menu links
+ */
+#main-menu {
+}
+
+#secondary-menu {
+}
+
+/*
+ * Menu blocks
+ */
+.block-menu {
+}
+
+/*
+ * "Menu block" blocks. See http://drupal.org/project/menu_block
+ */
+.block-menu_block {
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.breadcrumb 
+{
+height:20px;
+padding:0;
+}
+.breadcrumb span
+{
+}
+.breadcrumb span,
+.breadcrumb a
+{
+text-decoration:none;
+font-size:10px;
+margin:0 10px 0 0;
+padding:0;
+float:left;
+text-indent:9px;
+height:14px;
+}
+
+.breadcrumb span a.back
+{
+margin:-1px -1px -1px 9px;
+background:url(../images/repeat-x.png) 0 -559px no-repeat;
+font-size:8px;
+width:17px;
+height:16px;
+float:right;
+}

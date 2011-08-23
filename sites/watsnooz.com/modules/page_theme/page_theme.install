@@ -1,0 +1,174 @@
+<?php
+// $Id: page_theme.install,v 1.1.2.11 2010/09/30 13:22:52 flanker Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the page_theme module.
+ */
+
+
+/**
+ * Implementation of hook_schema().
+ */
+function page_theme_schema() {
+
+  $schema = array();
+  $schema['page_theme'] = array(
+    'description' => 'Page theme settings.',
+    'fields' => array(
+      'ptid' => array(
+        'description' => 'Primary Key: Unique page theme ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'theme' => array(
+        'description' => 'Theme name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'pages' => array(
+        'description' => 'List of paths to which the theme is assigned.',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'status' => array(
+        'description' => 'Theme enabled status.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'Theme weight within pages.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('ptid'),
+    'unique keys' => array(
+      'theme' => array('theme'),
+    ),
+    'indexes' => array(
+      'list' => array('theme', 'weight'),
+    ),
+  );
+
+  return $schema;
+}
+
+
+/**
+ * Implementation of hook_install().
+ */
+function page_theme_install() {
+
+  drupal_install_schema('page_theme');
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function page_theme_uninstall() {
+
+  drupal_uninstall_schema('page_theme');
+}
+
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Add status and weight field.
+ */
+function page_theme_update_6100() {
+
+  $ret = array();
+  db_add_field($ret, 'page_theme', 'status', array('type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0));
+  db_add_field($ret, 'page_theme', 'weight', array('type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0));
+
+  $result = db_query('SELECT theme FROM {page_theme}');
+  while ($page_theme = db_fetch_object($result)) {
+    db_query('UPDATE {page_theme} SET status = 1 WHERE theme = "%s"', $page_theme->theme);
+  }
+
+  return $ret;
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Add preview field.
+ */
+function page_theme_update_6101() {
+
+  $ret = array();
+  db_add_field($ret, 'page_theme', 'preview', array('type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0));
+
+  $result = db_query('SELECT theme FROM {page_theme}');
+  while ($page_theme = db_fetch_object($result)) {
+    db_query('UPDATE {page_theme} SET preview = 1 WHERE theme = "%s"', $page_theme->theme);
+  }
+
+  return $ret;
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Rename field preview to editpage.
+ */
+function page_theme_update_6102() {
+
+  $ret = array();
+  db_change_field($ret, 'page_theme', 'preview', 'editpage',  array('type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0));
+
+  return $ret;
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Fix default value for theme field.
+ */
+function page_theme_update_6103() {
+
+  $ret = array();
+  db_drop_primary_key($ret, 'page_theme');
+  db_change_field($ret, 'page_theme', 'theme', 'theme', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''), array('primary key' => array('theme')));
+
+  return $ret;
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Add page theme ID field and update table indices.
+ */
+function page_theme_update_6104() {
+
+  $ret = array();
+  db_drop_primary_key($ret, 'page_theme');
+  db_add_field($ret, 'page_theme', 'ptid', array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE), array('primary key' => array('ptid')));
+  db_add_unique_key($ret, 'page_theme', 'theme', array('theme'));
+  db_add_index($ret, 'page_theme', 'list', array('theme', 'weight'));
+
+  return $ret;
+}
+
+/**
+ * Implementation of hook_update_N().
+ *
+ * Drop editpage field which is no longer used.
+ */
+function page_theme_update_6105() {
+
+  $ret = array();
+  db_drop_field($ret, 'page_theme', 'editpage');
+
+  return $ret;
+}
