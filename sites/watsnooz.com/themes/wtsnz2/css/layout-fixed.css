@@ -82,6 +82,11 @@ body {
   margin-left: 272px; /* LTR */ /* The width of .region-sidebar-first. */
   margin-right: -1000px; /* LTR */ /* Negative value of #content's width + left margin. */
 }
+#content.wait
+{
+opacity:0.4;
+-moz-opacity:0.4;
+}
 
 .sidebar-second #content {
   width: 760px;

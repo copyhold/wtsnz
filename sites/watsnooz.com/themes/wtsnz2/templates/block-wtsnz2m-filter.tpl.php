@@ -19,8 +19,9 @@
 </div>
 <div id="filterbysource">
 <h4><?php echo t('by sources');?></h4>
-<cite class="checked"><?php echo t('News network');?></cite>
-<cite><?php echo t('Nooz writers');?></cite>
+<cite class="checked" rel="both"><?php echo t('Both');?></cite>
+<cite rel="network"><?php echo t('News network');?></cite>
+<cite rel="authors"><?php echo t('Nooz writers');?></cite>
 <div class="select">
 <span></span>
 <i>Keegan deVitte</i>
