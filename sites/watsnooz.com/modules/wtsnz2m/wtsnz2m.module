@@ -247,48 +247,22 @@ function wtsnz2m_block($op='view',$delta=0,$edit=null) {
     case 'view':
       switch ($delta) {
         case 'lastminote':
-          $filter = array();
-          if (preg_match('~taxonomy/term/(\d+)~',$_GET['q'],$matches)) {
-            $filter[] = 'AND tncategory.tid='.$matches[1];
-          }
-          if ($_GET['region']) {
-            $countrytids = db_result(db_query('select group_concat(tid) from term_data where name in ("' . join('","',wtsnz::regionCountries($_GET['region'])) . '")'));
-            $filter[] = 'AND tnregion.tid IN ('.$countrytids.')';
-          }
-          if ($_GET['author']) {
-            $filter[] = 'AND user.uid=' . (int)$_GET['author'];
-          }
-          if (count($filter)) $filter = join(' ',$filter);
-          else $filter = '';
-          
-          $q = <<<EOQ
-SELECT node.nid AS nid, node_data_field_fi_origurl.field_fi_origurl_value AS origurl, node_data_field_fi_origurl.field_fi_media_value AS media, node.title AS node_title, node_revisions.teaser AS body, users.name AS users_name, users.uid AS users_uid, node_comment_statistics.comment_count AS comment_count, node.created AS node_created, node_counter.totalcount AS totalcount
-FROM node node
-LEFT JOIN content_type_feed_item node_data_field_fi_origurl USING ( vid )
-INNER JOIN node_revisions node_revisions USING ( vid )
-INNER JOIN users users ON users.uid = node.uid
-LEFT JOIN node_comment_statistics node_comment_statistics ON node.nid = node_comment_statistics.nid
-LEFT JOIN node_counter node_counter ON node.nid = node_counter.nid
-INNER JOIN term_node tncategory ON tncategory.nid=node.nid
-INNER JOIN term_node tnregion   ON tnregion.nid=node.nid
-WHERE node.status <>0
-  AND node.type='feed_item'
-  $filter
-ORDER BY node_created DESC
-LIMIT 1 
-EOQ;
-          $one = db_fetch_object(db_query($q));
+          $r = wtsnz::getFilteredNodes($_GET,2);
+          $one = db_fetch_object($r);
+          $one = node_load(array('nid'=>$one->nid));
           $tags = db_query('select name,td.tid,td.vid from term_node inner join term_data td using (tid) where nid=%d',$one->nid);
           $alltags = array();
           while ($tag=db_fetch_object($tags)) {
           	$alltags[$tag->vid][$tag->tid] = $tag;
           }
+          $two = db_fetch_object($r);
+          $two = node_load($two->nid);
           $block = array(
           'subject' => t('last minute'),
           'node' => $one,
           'tags' => $alltags,
-          'next' => $next,
-          'content' => strip_tags($one->body),
+          'next' => $two,
+          'content' => strtr($one->teaser,array('<'=>'[','>'=>']')),
           );
           return $block;
           break;

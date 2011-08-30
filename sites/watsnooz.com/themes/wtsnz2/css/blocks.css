@@ -385,14 +385,16 @@ font-style:normal;
 	float: left;
 	height: 252px;
 }
-#block-views-lastminute-block_1 .view-lastminute.view-display-id-block_2 {
+#block-views-lastminute-block_1 > .content > p {
 	font-size: 12px;
 	margin-top: 20px;
   line-height:14px;
   margin-left:0;
+  float:left;
+  width:506px;
 }
 
-.view-lastminute.view-display-id-block_2 em
+#block-views-lastminute-block_1 .next em
 {
 background:url(../images/repeat-x.png) right -589px no-repeat #bdbdbd;
 color:#fff;
@@ -404,7 +406,7 @@ height:13px;
 font-style:normal;
 font-size:10px;
 }
-.view-lastminute.view-display-id-block_2 cite {
+#block-views-lastminute-block_1 .next cite {
   font-style:normal;
 	float: right;
 	font-size: 10px;
