@@ -28,7 +28,7 @@ $category = current($block->tags[2]); // vid=2 - categories
 <dt class="time"><?php echo wtsnz::formatTimeAgo($block->node->created);?></dt>
 </dl></div>
 <p class="next">
-<?php echo '<em>', t('related news'), '</em>',l($block->next->title,'node/'.$block->next-nid) , '<cite>' , substr(date('l',$block->next->created),0,3) . date(' M d,g:i A',$block->next->created) , '</cite>';?>
+<?php echo '<em>', t('related news'), '</em>',l($block->next->title,'node/'.$block->next->nid) , '<cite>' , substr(date('l',$block->next->created),0,3) . date(' M d,g:i A',$block->next->created) , '</cite>';?>
 </p>
 </div>
 </div> <!-- /.block -->
