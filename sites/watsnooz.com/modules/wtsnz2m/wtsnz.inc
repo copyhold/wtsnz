@@ -65,14 +65,14 @@ class wtsnz {
     }    
     return '<cite rel="'.date('r',time()).'" title="'.t('the time that the news has been updated').'">' . floor($diff) . '.' . sprintf('%02s',floor(($diff - floor($diff)) * $div)) . ' <b>' . t('!txt ago',array('!txt'=>$txt)) . '</b></cite>'; 
   }
-  public static function getFilteredNodes($get=null,$count=4,$page=0) {
+  public static function getFilteredNodes($get=null,$count=4,$start=0) {
     $get = is_array($get)?$get:$_GET;
     $filter = array();
     if (preg_match('~taxonomy/term/(\d+)~',$get['q'],$matches)) {
       $filter[] = 'AND tncategory.tid='.$matches[1];
     }
     if ($get['region']) {
-    $countrytids = db_result(db_query('select group_concat(tid) from term_data where name in ("' . join('","',wtsnz::regionCountries($_GET['region'])) . '")'));
+    $countrytids = db_result(db_query('select group_concat(tid) from term_data where name in ("' . join('","',wtsnz::regionCountries($_REQUEST['region'])) . '")'));
       $filter[] = 'AND tnregion.tid IN ('.$countrytids.')';
     }
     if ($get['author']) {
@@ -82,7 +82,7 @@ class wtsnz {
     else $filter = '';
     
     $q = <<<EOQ
-SELECT node.nid
+SELECT DISTINCT node.nid
 FROM node
 INNER JOIN term_node tncategory ON tncategory.nid=node.nid
 INNER JOIN term_node tnregion   ON tnregion.nid=node.nid
@@ -90,7 +90,7 @@ WHERE node.status <>0
 AND node.type='feed_item'
 $filter
 ORDER BY created DESC
-LIMIT $page,$count
+LIMIT $start,$count
 EOQ;
     return db_query($q);
   }

@@ -57,7 +57,11 @@ function _wtsnz2_getfilteredcontent($params) {
   ob_start();
   include('sites/watsnooz.com/themes/wtsnz2/templates/block-wtsnz2m-lastminote.tpl.php');
   $lm = ob_get_clean();
-  return array('lastminute'=>$lm);
+  $block = (object)wtsnz2m_block('view','lastfpnews');
+  ob_start();
+  include('sites/watsnooz.com/themes/wtsnz2/templates/block-wtsnz2m-lastfpnews.tpl.php');
+  $rest = ob_get_clean();
+  return array('lastminute'=>$lm,'lastfpnews'=>$rest);
 }
 
 function _wtsnz2_getusersettings() {
@@ -288,7 +292,7 @@ function wtsnz2m_block($op='view',$delta=0,$edit=null) {
           return array('subject'=>'','content'=>'<div><h2>'.t('hot topics').'</h2><p>'.$hott.'</p><h2>'.t('Sponsored').'</h2><p class="gadd">Luxury cars</p></div>' . l(t('submit a story'),'node/add/feed-item'));
           break;
         case 'lastfpnews':
-          return array('subject'=>'<none>','content'=>_wtsnz2_restonfpblock(array('page'=>0,'url'=>$_GET['q'])));
+          return array('subject'=>'<none>','content'=>_wtsnz2_restonfpblock(array('page'=>0)));
           break;
         case 'weather':
           drupal_add_js(drupal_get_path('module','wtsnz2m').'/jquery.autocomplete.pack.js');
@@ -308,36 +312,15 @@ function wtsnz2m_block($op='view',$delta=0,$edit=null) {
  *
  */
 function _wtsnz2_restonfpblock($arg) {
-  $url = drupal_get_normal_path(trim($arg['url'],'/'),$GLOBALS['language']->language);
-
-  if (preg_match('~^taxonomy/term/(\d+)$~',$url,$matches)) {
-    $children = db_result(db_query('select group_concat(tid) from {term_hierarchy} where parent=%d',$matches[1]));
-    if ($children) {
-      $cond = join(',',array($children,$matches[1]));
-      $filter = ' AND tn.tid in ('. $cond . ') ';
-    } else {
-      $filter = ' AND tn.tid='.$matches[1] . ' ';
-    }
-  } else {
-    $filter = '';
+  $start = $arg['page']?$arg['page']* 5:2;
+  $r = wtsnz::getFilteredNodes($_REQUEST,5,$start);
+  $block = array();
+  while ($one=db_fetch_object($r)) {
+    $args .= ',' . $one->nid;
   }
-  
-  $q = '
-SELECT GROUP_CONCAT(nid SEPARATOR \'+\') 
-FROM (
-SELECT DISTINCT fni.nid
-FROM {feeds_node_item} fni
-INNER JOIN {term_node} tn
-USING ( nid )
-INNER JOIN {term_data} td
-USING ( tid )
-INNER JOIN {node} n ON n.nid = fni.nid
-WHERE 1' . $filter . '
-ORDER BY n.created DESC
-LIMIT %d , 5) s';
-  $args = db_result(db_query($q,$arg['page'] * 5));
+
   $view = views_get_view('restonfp');
-  $content = $view->execute_display('block_1',array($args));
+  $content = $view->execute_display('block_1',array(trim($args,',')));
   return $content['content'];
 }
 

@@ -11,7 +11,7 @@ $by = t('By !BY',array('!BY'=>$by));
 $category = current($block->tags[2]); // vid=2 - categories
 ?>
 <div id="block-views-lastminute-block_1">
-<div class="content"><h1 class="title"><?php print t('last minute...'); ?></h1>
+<div class="content block-content"><h1 class="title"><?php print t('last minute...'); ?></h1>
 <?php echo l($category->name,'taxonomy/term/'.$category->tid,array('attributes'=>array('class'=>'category'))) , '<span>' , theme('image',$block->node->media,'','',null,0)  , '</span><div><h2>' , l($block->node->title,'node/'.$block->node->nid) , '</h2><div class="field-body">' , $content , '</div>' ;?>
 <dl class="meta">
 <dt><?php echo $by;?>.</dt>

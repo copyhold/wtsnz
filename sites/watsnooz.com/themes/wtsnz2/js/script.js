@@ -1,10 +1,12 @@
 var filter = {},
     Filter = new Filter();
     $shareIcons = null,
-    evals=[];
+    evals=[],
+    scrollpage=null;
 
 $(function(){
   $.easing.def = 'easeInQuart';
+  scrollpage = $.browser.safari?'body':'html';
 
   $.ajax({
     data: {"function":"getusersettings"},
@@ -114,6 +116,9 @@ $(function(){
 function Filter() {
   var filter = {url:document.location.pathname};
   return {
+    get:function() {
+      return filter;
+    },
     set:function(param){
       
       if (param.country)  filter.region  = param.country;
@@ -124,15 +129,19 @@ function Filter() {
       filter['function'] = "getfilteredcontent";
       $('#content').addClass('wait');
       var t =  $('#block-views-lastminute-block_1').position();
-      $('html').animate({scrollTop:t.top},1300);
+      $(scrollpage).animate({scrollTop:t.top},1300);
       $.ajax({
         dataType:'json',
         type:'post',
         url:'/ajaxget',
         data:filter,
         success:function(data){
-          $('#block-views-lastminute-block_1').find('.content').replaceWith($(data.content.lastminute).find('.content'));
+          $('#block-views-lastminute-block_1').replaceWith($(data.content.lastminute));
+//          $('#block-views-lastminute-block_1').find('>.content').replaceWith($(data.content.lastminute).find('.block-content'));
+//          $('#block-wtsnz2m-lastfpnews').find('>.content').replaceWith($(data.content.lastfpnews).find('.block-content'));
+          $('#block-wtsnz2m-lastfpnews').replaceWith($(data.content.lastfpnews));
           $('#content').removeClass('wait');
+          Drupal.behaviors.lastfpnews();
         }
       })
     }
@@ -156,10 +165,11 @@ Drupal.behaviors.lastfpnews = function(context){
         page = p[1];
       }
     }
-    var datasend = {
-      url: l['path'],
-      "function":"restonfpblock",
-      page: page};
+    
+    var datasend = Filter.get();
+    datasend['function'] = "restonfpblock";
+    datasend['page'] = page;
+    
     var pos = $(this).position();
     pos = pos.top + $('html').scrollTop();
     $(this).css('visibility','hidden');
