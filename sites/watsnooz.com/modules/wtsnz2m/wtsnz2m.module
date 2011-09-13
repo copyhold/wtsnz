@@ -432,6 +432,18 @@ function wtsnz2m_preprocess_node($vars) {
   }
   if ($vars['node']->content['comments']['#value']) $vars['comments'] = $vars['node']->content['comments']['#value'];
 }
+
+//function wtsnz2m_taxonomy($op,$object_type,$object_values) {
+//  switch ($op) {
+//    case 'insert':
+//    case 'update':
+////      create|update path alias
+//      $src = 'taxonomy/term/'.$object_values->tid;
+//      $dst = 
+//      path_set_alias($src,$dst,null,$GLOBALS['language']->language);
+//      break;
+//  }
+//}
 function theme_country($country) {
   return l($country->nativename,'news/'.$country->code,array('attributes'=>array('class'=>'fl ' . $country->code,'title'=>$country->nativename)));
 }

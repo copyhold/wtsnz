@@ -68,7 +68,7 @@ class wtsnz {
   public static function getFilteredNodes($get=null,$count=4,$start=0) {
     $get = is_array($get)?$get:$_GET;
     $filter = array();
-    if (preg_match('~taxonomy/term/(\d+)~',$get['q'],$matches)) {
+    if (preg_match('~taxonomy/term/(\d+)~',$get['q'],$matches) || preg_match('~taxonomy/term/(\d+)~',$get['url'],$matches)) {
       $filter[] = 'AND tncategory.tid='.$matches[1];
     }
     if ($get['region']) {
